@@ -1,9 +1,10 @@
-from db import Credential
+from db.connection import Connection
+from db.credential import Credential
 
-class Connection:
+class PostgresConnection(Connection):
 
     """
-        Connection class for database connection statement
+        Connection class for database connection statement for postgres
     """
 
     protocol: str 
@@ -24,12 +25,8 @@ class Connection:
         self.db_name = db_name
         self.credential = credential
 
-    def url(self):
-        return self
+    def url(self) -> str:
+        return str(self)
 
     def __str__(self):
-        return f"{self.protocol}://{Credential.get_credential_str(self.credential)}@{self.host}:{self.port}/{self.db_name}"
-
-
-
-
+        return f"{self.protocol}://{self.credential}@{self.host}:{self.port}/{self.db_name}"

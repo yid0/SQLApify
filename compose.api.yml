@@ -1,0 +1,16 @@
+services:
+  sqlapi:
+    container_name: sqlapi
+    build:
+      context: .
+      args:
+        - BUILD_TARGET=postgres
+      dockerfile: Dockerfile.dev    
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/venv/src
+    env_file:
+      - ./env/.env.$BUILD_TARGET.dev
+    environment:
+      PYTHONPATH: /app/venv/src

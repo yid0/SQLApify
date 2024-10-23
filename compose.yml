@@ -1,0 +1,23 @@
+services:
+
+  postgres:
+    container_name: postgres
+    image: yidoughi/postgrepine:latest
+    restart: always    
+    command: ["start.sh"] 
+    environment:
+      POSTGRES_PASSWORD: P@ssword
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    restart: always    
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL:-admin@admin.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW:-admin}
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
