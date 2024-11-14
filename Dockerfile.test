@@ -1,7 +1,6 @@
 ARG ALPINE_VERSION=latest
 ARG WORKDIR_APP=/app
 ARG BUILD_TARGET=postgres
-ARG APP_ENV=dev 
 
 ARG BUID_DEPS=sqlite-libs 
 
@@ -13,7 +12,7 @@ ARG VIRTUAL_ENV=${WORKDIR_APP}/venv
 
 ARG BUID_DEPS
 ARG BUILD_TARGET
-ARG APP_ENV
+ARG APP_ENV=dev
 
 ARG MAIN_REQUIREMENT_FILE=requirements.${BUILD_TARGET}.txt
 
@@ -25,33 +24,33 @@ WORKDIR ${VIRTUAL_ENV}
 
 COPY --chown=1001:1001 requirements.txt  ${DEPS_FILE_PATH} ${VIRTUAL_ENV}
 
-RUN mkdir ${VIRTUAL_ENV}/src && pip --no-cache-dir install -r requirements.txt -r ${MAIN_REQUIREMENT_FILE}
+RUN mkdir ${VIRTUAL_ENV}/src && pip --no-cache-dir install pytest pytest-watch httpx -r requirements.txt -r ${MAIN_REQUIREMENT_FILE}
 
-COPY --chown=1001:1001  src ${VIRTUAL_ENV}/src
+COPY --chown=1001:1001 pyproject.toml ${VIRTUAL_ENV}/pyproject.toml
+COPY --chown=1001:1001 env ${VIRTUAL_ENV}/env
+COPY --chown=1001:1001 src ${VIRTUAL_ENV}/src
+COPY --chown=1001:1001 tests ${VIRTUAL_ENV}/tests
 
 RUN rm requirements.txt -r ${MAIN_REQUIREMENT_FILE}  
 
 
+
 FROM yidoughi/fastpine:latest
 
-ARG APP_ENV
 ARG WORKDIR_APP=/app
 ARG VIRTUAL_ENV=${WORKDIR_APP}/venv
-ARG BUILD_TARGET
+
+ENV HOME=${VIRTUAL_ENV}
 
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-ENV BUILD_TARGET=${BUILD_TARGET} \
-    APP_ENV=${APP_ENV} \
-    HOME=${VIRTUAL_ENV}
+ARG BUILD_TARGET
+ENV BUILD_TARGET=${BUILD_TARGET}
 
 WORKDIR ${HOME}
 
-RUN ls -la /usr/lib
-
-COPY --from=builder --chown=1001 ${VIRTUAL_ENV} ${VIRTUAL_ENV} 
-
+COPY --from=builder --chown=1001 ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 RUN rm -rf /var/cache/apk/* /tmp/* && fastapi --help
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--reload"]
+CMD ["ptw", "--runner", "pytest", "tests"]

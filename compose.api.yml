@@ -1,6 +1,6 @@
 services:
-  sqlapi:
-    container_name: sqlapi
+  sqlapify:
+    container_name: sqlapify
     build:
       context: .
       args:

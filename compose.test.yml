@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      PYTHONPATH: /app/venv/src
+    volumes:
+      - ./src:/app/venv/src
+      - ./tests:/app/venv/tests
+    

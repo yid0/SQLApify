@@ -2,3 +2,8 @@
 **/**/__pycache__
 **/.env*
 .ash_*
+htmlcov/**
+.coverage
+sql**
+deploy/**
+venv/
