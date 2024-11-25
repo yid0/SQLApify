@@ -9,6 +9,8 @@ services:
       POSTGRES_PASSWORD: P@ssword
     ports:
       - "5432:5432"
+    volumes:
+      - '/etc/ssl/certs/postgres/:/var/lib/postgresql/certs/:ro'  
 
   pgadmin:
     container_name: pgadmin

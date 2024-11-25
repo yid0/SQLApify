@@ -37,12 +37,27 @@ run-deps:
 
 .PHONY:	install
 install:
-	source venv/bin activate && pip -r requirement.txt
-	
+	pip install -r requirements.txt
+
+.PHONY: clean
+clean:
+	rm -rf **/__pycache__/** **/build/** *.egg-info
+	find . -name "__pycache__" -type d -exec rm -rf {} +
+	find . -name "*.pyc" -exec rm -f {} +
+	find . -name "*.pyo" -exec rm -f {} +
+
 .PHONY:	local
 local:
 	BUILD_TARGET=${BUILD_TARGET} POSTGRES_HOST=localhost uvicorn src.main:app --host 0.0.0.0 --reload --env-file env/.env.postgres.dev 
 
+.PHONY:	lint
+lint:
+	ruff check --fix && ruff format
+
+.PHONY:	check
+check:
+	ruff check --watch
+	
 .PHONY:	dev
 dev:
 	docker ps -qa | docker rm -f "@"
@@ -57,3 +72,7 @@ test:
 .PHONY: deploy-sqlapify
 deploy-sqlapify:
 	microk8s kubectl apply -k deploy/sqlapify
+
+.PHONY: delete-sqlapify
+delete-sqlapify:
+	microk8s kubectl delete -k deploy/sqlapify

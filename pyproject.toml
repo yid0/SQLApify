@@ -1,6 +1,6 @@
 [metadata]
 name = "SQLApify"
-version = "0.1.0"
+version = "1.0.0"
 description = "Talk with a DBMS throug a REST API"
 author = "Yani IDOUGHI"
 author_email = "idoughiyani@gmail.com"

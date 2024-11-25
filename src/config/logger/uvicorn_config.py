@@ -1,9 +1,7 @@
-from logger.logger_factory import LoggerFactory
-import logging
 def load_config():
     return {
         "version": 1,
-        "disable_existing_loggers": False,           
+        "disable_existing_loggers": False,
         "formatters": {
             "dynamic": {
                 "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -18,14 +16,14 @@ def load_config():
             },
         },
         "loggers": {
-            "": {  
+            "default": {
                 "level": "INFO",
                 "handlers": [],
                 "propagate": False,
             },
             "uvicorn": {
                 "level": "INFO",
-                "handlers": [],
+                "handlers": ["default"],
                 "propagate": False,
             },
             "uvicorn.error": {
@@ -38,7 +36,7 @@ def load_config():
                 "handlers": [],
                 "propagate": False,
             },
-            "fastapi": {  
+            "fastapi": {
                 "level": "INFO",
                 "handlers": [],
                 "propagate": False,

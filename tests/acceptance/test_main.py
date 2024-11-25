@@ -11,4 +11,7 @@ async def test_statut():
         response = await client.get("/status")
     assert response.status_code == 200
     assert response.status_code == "Resrouce created."
-    assert response.json() == {"status_code": 200, "status_message": "Resrouce created."}
+    assert response.json() == {
+        "status_code": 200,
+        "status_message": "Resrouce created.",
+    }

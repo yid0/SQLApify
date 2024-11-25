@@ -1,10 +1,16 @@
 from abc import ABC, abstractmethod
+from .connection import Connection
+from .engine import Engine
+
 
 class BaseDatabase(ABC):
+    def __init__(self, connection: Connection, engine: Engine):
+        self.engine = engine
+
     """
     Abstract class for database
     """
-    
+
     @abstractmethod
     def connect(self):
         """
@@ -12,7 +18,7 @@ class BaseDatabase(ABC):
         Will be overridden by each database type implementation.
         """
         pass
-    
+
     @abstractmethod
     def get_connection_url(self) -> str:
         """
@@ -28,4 +34,8 @@ class BaseDatabase(ABC):
         for the current database.
         Will be overridden by each database type implementation.
         """
+        pass
+
+    @abstractmethod
+    def dispose(self):
         pass

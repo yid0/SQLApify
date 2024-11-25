@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 
+
 class BaseResponse(BaseModel):
-    status_code: int = 201
-    message: str = "Resource created."
-    
-    def __init__(self, message: str, status_code: int, **kwargs):
+    status_code: int = 200
+    message: str = "Resource created or updated successfully."
+    detail: str
+
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.status_code = status_code
-        self.message = message
