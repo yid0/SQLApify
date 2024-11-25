@@ -5,8 +5,17 @@ on:
     branches:
       - main
     paths:
+<<<<<<< HEAD
       - './**'
       - '.github/workflows/push.yml'
+=======
+      - '**'
+      - '.github/workflows/push.yml'
+  workflow_run:
+    workflows: ["sqlapify-postgres"]
+    types:
+      - completed
+>>>>>>> 81a2d0e878bd9f77682e041c1c4dfa5876d9a97a
 env:
   SQLAPIFY_VERSION: "1.0.0"
   BUILD_TARGET: "postgres"
