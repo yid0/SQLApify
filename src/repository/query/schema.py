@@ -2,6 +2,7 @@ from sqlmodel import Session
 from sqlalchemy.exc import SQLAlchemyError
 from repository import SQLStatementAdapter
 
+
 class QuerySchema:
     """
     Class to handle schema-related queries in the database.
@@ -10,7 +11,7 @@ class QuerySchema:
     def __init__(self, session: Session, adapter: SQLStatementAdapter):
         """
         Initialize QuerySchema with a session and SQL statement adapter.
-        
+
         Args:
             session (Session): SQLModel session object.
             adapter (SQLStatementAdapter): Adapter to generate SQL statements.
@@ -21,10 +22,10 @@ class QuerySchema:
     def create(self, schema_name: str) -> bool:
         """
         Create a schema in the database with the specified name.
-        
+
         Args:
             schema_name (str): The name of the schema to create.
-        
+
         Returns:
             bool: True if the schema was created successfully, False otherwise.
         """
@@ -36,7 +37,7 @@ class QuerySchema:
             return True
         except SQLAlchemyError as e:
             print(f"Error creating schema '{schema_name}': {e}")
-            self.session.rollback()  # rollback to revert partial changes
+            self.session.rollback()
             return False
         finally:
-            self.session.close()
+            self.engine.dispose()

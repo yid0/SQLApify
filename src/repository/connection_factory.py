@@ -1,23 +1,33 @@
-from repository import DbType, Connection, Credential
+from repository import DbType, Connection
 from repository.provider import PostgresConnection
 from repository.provider import SQLiteConnection
-from config.postgres import PostgresAdminConfig 
+from config.logger import AppLogger
+
 
 class ConnectionFactory:
-    
-    @staticmethod
-    def create_connection(db_type: DbType, **kwargs) -> Connection:
-        print(kwargs['kwargs'])
+    logger = AppLogger(__name__).get_logger()
+
+    @classmethod
+    def create_connection(self, db_type: DbType, scope=None, **kwargs) -> Connection:
         match db_type:
-            case DbType.POSTGRES: 
-                return PostgresConnection(
-                    protocol=PostgresAdminConfig.env_dict["protocol"],
-                    host=PostgresAdminConfig.env_dict["host"],
-                    port=PostgresAdminConfig.env_dict["port"],
-                    db_name=kwargs['kwargs'].get("database"),
-                    credential=Credential(username= kwargs['kwargs'].get("username"),
-                                          password= kwargs['kwargs'].get("password")))
-            case DbType.SQLITE :
+            case DbType.POSTGRES:
+                return self.__create(self, scope=scope)
+            case DbType.SQLITE:
                 return SQLiteConnection(db_name=kwargs["db_name"])
-            case _ :
+            case _:
                 raise ValueError(f"Unsupported database type: {db_type}")
+
+    def __create(self, scope: str):
+        connection: None
+        match scope:
+            case "super_user":
+                connection = PostgresConnection.super_user()
+            case "app_user":
+                connection = PostgresConnection.app_user()
+            case "management_user":
+                connection = PostgresConnection.management_user()
+            case _:
+                raise ValueError(f"Unsupported database type: {scope}")
+
+        self.logger.debug(f"DATA CONNECTION {connection}")
+        return connection

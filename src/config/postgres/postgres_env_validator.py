@@ -1,9 +1,9 @@
 from pydantic import Field
 from common.validator import BaseValidator
 
-class PostgresConfigValidator(BaseValidator): 
-    
-    protocol: str = Field(min_length=3, max_length=10)
+
+class PostgresConfigValidator(BaseValidator):
+    protocol: str = Field(min_length=3, max_length=20)
     username: str = Field(min_length=3, max_length=20)
     password: str = Field(min_length=8)
     host: str = Field(min_length=3, max_length=255)

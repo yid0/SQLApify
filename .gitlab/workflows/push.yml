@@ -1,0 +1,48 @@
+name: sqlapify-postgres
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**'
+      - '.github/workflows/push.yml'
+  workflow_run:
+    workflows: ["sqlapify-postgres"]
+    types:
+      - completed
+env:
+  SQLAPIFY_VERSION: "1.0.0"
+  BUILD_TARGET: "postgres"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+                    push: true
+          build-args: | 
+            "SQLAPIFY_VERSION=${{ env.SQLAPIFY_VERSION }}"
+            "BUILD_TARGET=${{ env.BUILD_TARGET }}"
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/sqlapify-${{ env.BUILD_TARGET }}:${{SQLAPIFY_VERSION}}
+            ${{ secrets.DOCKERHUB_USERNAME }}/sqlapify-${{ env.BUILD_TARGET }}:latest

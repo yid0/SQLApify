@@ -2,8 +2,11 @@
 **/**/__pycache__
 **/.env*
 .ash_*
-htmlcov/**
+.ruff**
+.pytest**
+htmlcov/
 .coverage
 sql**
 deploy/**
 venv/
+src/middleware/

@@ -54,4 +54,4 @@ COPY --from=builder --chown=1001 ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 RUN rm -rf /var/cache/apk/* /tmp/* && fastapi --help
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--reload"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--reload", "--lifespan" , "on"]

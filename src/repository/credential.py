@@ -1,7 +1,7 @@
 from urllib.parse import quote
 
-class Credential:
 
+class Credential:
     username: str
 
     password: str

@@ -5,18 +5,25 @@ from config.logger import AppLogger
 
 router = APIRouter(
     prefix="/user",
-    tags=["user"],)
+    tags=["user"],
+)
 
-logger = AppLogger("router(/user)").get_logger()
+logger = AppLogger("UserController").get_logger()
 
-@router.post("", response_model=BaseResponse)
+
+@router.post("/", response_model=BaseResponse)
 async def create_user(dto: CreateUserRoleDTO):
     """HTTP endpoint for creating an application user that will interact with the DBMS."""
     try:
-        logger.debug("Executng create_user method *** ")
+        logger.info("Handle create_user method *** ")
         service = DatabaseService()
-        await service.execute(dto)
-        return BaseResponse(status_code=201, message="User created successfully.")
+        service_response = await service.execute(dto)
+        if service_response is not None:
+            return BaseResponse(status_code=200, detail=f"{service_response}")
+        else:
+            return BaseResponse(status_code=400)
     except Exception as e:
         print(f"Error: {e}")
-        raise HTTPException(status_code=500, detail="An error occurred while creating the user.")
+        raise HTTPException(
+            status_code=500, detail="An error occurred while creating the user."
+        )
